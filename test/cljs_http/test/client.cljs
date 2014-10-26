@@ -1,7 +1,9 @@
 (ns cljs-http.test.client
-  (:require-macros [cemerick.cljs.test :refer [is deftest testing]])
+  (:require-macros [cemerick.cljs.test :refer [is deftest testing done]]
+                   [cljs.core.async.macros :refer [go]])
   (:require [cemerick.cljs.test :as t]
-            [cljs.core.async :as async]
+            [cljs.nodejs :as node]
+            [cljs.core.async :as async :refer [<!]]
             [cljs-http.client :as client]
             [cljs-http.core :as core]
             [cljs-http.util :as util]))
@@ -129,3 +131,23 @@
     (testing "request api with middleware"
       (is (not= c (client/request request-no-chan)))
       (is (= c (client/request request-with-chan))))))
+
+(def u (node/require "util"))
+
+(deftest ^:async test-get-simple
+  (testing "argh"
+    (let [request (client/get "http://kyledawkins.com/test/get.json")]
+      (go (let [response (<! request)
+                parsed (-> response :body util/json-decode (js->clj :keywordize-keys true))]
+            (is (= (:status response) 200))
+            (is (= parsed {:foo "bar" :quux [ "baz" "zonk" ]}))
+            (done))))))
+
+(deftest ^:async test-post-simple
+  (testing "post argh"
+    (let [request (client/post "http://posttestserver.com/post.php" {:form-params {:foo "bar" :baz "quux"}})]
+      (go (let [response (<! request)]
+            (prn (:body response))
+            (is (= (:status response) 200)))))))
+
+(set! *main-cli-fn* #())

@@ -68,3 +68,5 @@
     "" {}
     "Content-Type: application/edn\nContent-Length: 10"
     {"content-type" "application/edn", "content-length" "10"}))
+
+(set! *main-cli-fn* #())
