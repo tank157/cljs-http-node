@@ -2,7 +2,7 @@
 
 A ClojureScript HTTP library for node.js.
 
-This is a fork of [cljs-http](https://github.com/r0man/cljs-http) that
+This is a fork of [cljs-http](https://github.com/r0man/cljs-http), which
 unfortunately does not run at all under node.js due to the absence of
 XMLHttpRequest.  The only thing that needs to be rewritten is the
 core/request function, which I've reimplemented using core.async and
