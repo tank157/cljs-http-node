@@ -98,6 +98,9 @@
 
     (doto client
       (.on "error" (fn [error]
-                     (.log js/console (str "Error in request: " error))))
+                     (do
+                       (.log js/console (str "Error in request: " error))
+                       (put! chunks-ch {:status -1 :error error})
+                       (async/close! chunks-ch))))
       (.end))
     response-ch))
