@@ -53,7 +53,9 @@
   (clj->js {:method (or (:request-method req) :get)
             :port (or (:server-port req) 80)
             :hostname (:server-name req)
-            :path (:uri req)
+            :path (if (contains? req :query-string)
+                    (str (:uri req) "?" (:query-string req))
+                    (:uri req))
             :headers (:headers req)}))
 
 (defn clean-response
