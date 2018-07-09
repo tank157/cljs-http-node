@@ -2,15 +2,15 @@
   :description "FIXME: write this!"
   :url "http://example.com/FIXME"
 
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [org.clojure/clojurescript "0.0-2311"]
-                 [org.clojure/core.async "0.1.303.0-886421-alpha"]
-                 [noencore "0.1.16"]
-                 [com.cognitect/transit-cljs "0.8.161"]]
+  :dependencies [[org.clojure/clojure "1.9.0"]
+                 [org.clojure/clojurescript "1.10.339"]
+                 [org.clojure/core.async "0.4.474"]
+                 [noencore "0.3.4"]
+                 [com.cognitect/transit-cljs "0.8.256"]]
 
-  :plugins [[lein-cljsbuild "1.0.4-SNAPSHOT"]
+  :plugins [[lein-cljsbuild "1.1.7"]
             [org.bodil/lein-noderepl "0.1.11"]
-            [com.cemerick/clojurescript.test "0.3.1"]]
+            [com.cemerick/clojurescript.test "0.3.3"]]
 
   :cljsbuild {
     :test-commands {"node" ["node" "test-runner.js" "test-js" "test-node.js"]}
