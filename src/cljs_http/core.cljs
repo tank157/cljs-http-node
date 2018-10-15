@@ -59,7 +59,7 @@
                      (:uri req))
              :headers (:headers req)}
             (when (= :https (:scheme req))
-              {:secureProtocol "TLSv1_method"
+              {:secureProtocol "TLSv1_2_method"
                :ciphers "ALL"}))))
 
 (defn clean-response
