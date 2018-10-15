@@ -86,7 +86,7 @@
         ;; This needs a stream abstraction!
         chunks-ch (chan)
         response-ch (chan)
-        (.log js/console "CLJS-HTTP-NODE: " (pr-str clj-request))
+        (.log js/console (str "CLJS-HTTP-NODE: " (pr-str clj-request)))
         client (.request scheme js-request
                          (fn [js-res]
                            (put! chunks-ch {:headers (-> js-res
