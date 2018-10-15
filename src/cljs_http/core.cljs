@@ -50,17 +50,17 @@
 
 (defn ->node-req
   [req]
-  (clj->js (merge
-            {:method (or (:request-method req) :get)
-             :port (or (:server-port req) 80)
-             :hostname (:server-name req)
-             :path (if (contains? req :query-string)
-                     (str (:uri req) "?" (:query-string req))
-                     (:uri req))
-             :headers (:headers req)}
-            (when (= :https (:scheme req))
-              {:secureProtocol "TLSv1_2_method"
-               :ciphers "ALL"}))))
+  (merge
+   {:method (or (:request-method req) :get)
+    :port (or (:server-port req) 80)
+    :hostname (:server-name req)
+    :path (if (contains? req :query-string)
+            (str (:uri req) "?" (:query-string req))
+            (:uri req))
+    :headers (:headers req)}
+   (when (= :https (:scheme req))
+     {:secureProtocol "TLSv1_2_method"
+      :ciphers "ALL"})))
 
 (defn clean-response
   [res]
@@ -77,7 +77,8 @@
         content-length (or (when body (.-length body)) 0)
         _ (prn content-length)
         headers (util/build-headers (assoc headers "content-length" content-length))
-        js-request (->node-req (assoc request :headers headers))
+        clj-request (->node-req (assoc request :headers headers))
+        js-request (clj->js clj-request)
         scheme (or protocol
                    (if (= (:scheme request) :https)
                      https
@@ -85,6 +86,7 @@
         ;; This needs a stream abstraction!
         chunks-ch (chan)
         response-ch (chan)
+        (.log js/console "CLJS-HTTP-NODE: " (pr-str clj-request))
         client (.request scheme js-request
                          (fn [js-res]
                            (put! chunks-ch {:headers (-> js-res
