@@ -50,13 +50,17 @@
 
 (defn ->node-req
   [req]
-  (clj->js {:method (or (:request-method req) :get)
-            :port (or (:server-port req) 80)
-            :hostname (:server-name req)
-            :path (if (contains? req :query-string)
-                    (str (:uri req) "?" (:query-string req))
-                    (:uri req))
-            :headers (:headers req)}))
+  (clj->js (merge
+            {:method (or (:request-method req) :get)
+             :port (or (:server-port req) 80)
+             :hostname (:server-name req)
+             :path (if (contains? req :query-string)
+                     (str (:uri req) "?" (:query-string req))
+                     (:uri req))
+             :headers (:headers req)}
+            (when (= :https (:scheme req))
+              {:secureProtocol "TLSv1_method"
+               :ciphers "ALL"}))))
 
 (defn clean-response
   [res]
